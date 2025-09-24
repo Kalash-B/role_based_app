@@ -55,19 +55,19 @@ const TaskList = ({ tasks, onTaskDelete, onTaskUpdate, showFullText }) => {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-[#00303F] mb-4 italic break-words">
+          <p className="text-lg text-[#00303F] mb-4 italic break-words">
             {task.description}
           </p>
 
           {/* Content */}
           <div className="mb-4">
-            <h4 className="text-sm font-medium text-[#00303F] mb-1">
+            <h4 className="text-xl font-medium text-[#00303F] mb-1">
               Content: 
             </h4>
-            <p className="text-sm text-[#00303F] break-words">
+            <p className="text-xl text-[#00303F] break-words">
               <b>English Summary:</b> {task.summary}
             </p>
-            <p className="text-sm text-[#00303F] break-words">
+            <p className="text-xl text-[#00303F] break-words">
               <b>Malayalam Summary:</b> {showFullText ? task.summaryML : task.fullText }
             </p>
           </div>

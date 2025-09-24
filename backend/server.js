@@ -20,7 +20,7 @@ let users = [
     id: "1",
     username: "Engineer",
     email: "engineer@metro.com",
-    name: "John Doe",
+    name: "Yash Jain",
     role: "user",
     password: "$2a$10$FZ2Jbi7ZZskYTZRr5HbZ9OwklAMdX8dTih/eVGe4Q.pP/zfe4L67e", // password1
     createdAt: new Date().toISOString(),
@@ -30,7 +30,7 @@ let users = [
     id: "2",
     username: "Manager",
     email: "manager@metro.com",
-    name: "Jane Smith",
+    name: "Anjali Menon",
     role: "user",
     password: "$2a$10$PfWqfmNY0sfLvNp6Y2qMlOx.V3gDos2qcoMpQgNKhz6Hz7dhiDboe", // password2
     createdAt: new Date().toISOString(),
@@ -40,7 +40,7 @@ let users = [
     id: "3",
     username: "Depot_Manager",
     email: "depot@metro.com",
-    name: "Bob Johnson",
+    name: "Vardhan Shah",
     role: "user",
     password: "$2a$10$cg7PbduO7SdKKy7KE00uVuDrP7zxhqFVyT9WJkwSKuA4.ZYTNxDzW", // password3
     createdAt: new Date().toISOString(),
@@ -50,7 +50,7 @@ let users = [
     id: "admin1",
     username: "admin",
     email: "admin@metro.com",
-    name: "Admin User",
+    name: "Kaushal Baldota",
     role: "admin",
     password: "$2a$10$FJNS7dKmnxe1iDSQkeRNhue9j/wtaMlcrbNBY8j8NCAUIA7Kvcd2G", // admin123
     createdAt: new Date().toISOString(),
@@ -60,7 +60,7 @@ let users = [
     id: "admin2",
     username: "superadmin",
     email: "superadmin@metro.com",
-    name: "Super Admin",
+    name: "Navya Nair",
     role: "admin",
     password: "$2a$10$ZGzvFAIcmRe9BxyINa0ihO3ucGVnJlEgUYkVdYG2Hglw4fFdQ.iEy", // super123
     createdAt: new Date().toISOString(),
@@ -365,7 +365,7 @@ app.post("/chat", async (req, res) => {
       taskText = tasks
         .map(
           (t, idx) =>
-            `Task ${idx + 1}: ${t.title}\nDescription: ${t.description}\nSummary: ${t.summary}\nStatus: ${t.status}`
+            `Task ${idx + 1}: ${t.title}\nSummary: ${t.summary}\nDescription: ${t.description}\nStatus: ${t.status}`
         )
         .join("\n\n");
     }

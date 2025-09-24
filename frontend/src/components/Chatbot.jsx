@@ -46,7 +46,7 @@ const ChatBot = ({ userId }) => {
         deadline: task.deadline || "Not set",
       }));
 
-      const response = await fetch("http://localhost:5000/chat", {
+      const response = await fetch("http://localhost:3001/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input, tasks: tasksForAI }),
