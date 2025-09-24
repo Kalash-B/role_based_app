@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Prepare Project Report",
+    "description": "Summarize the project details and prepare a final report.",
+    "description_ml": "പ്രോജക്റ്റ് വിശദാംശങ്ങൾ സംഗ്രഹിച്ച് അന്തിമ റിപ്പോർട്ട് തയ്യാറാക്കുക.",
+    "assignedTo": "user1",
+    "status": "pending",
+    "createdAt": "2025-09-22T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "Review Meeting Notes",
+    "description": "Review notes from the last client meeting and suggest improvements.",
+    "description_ml": "അവസാന ക്ലയന്റ് മീറ്റിംഗിൽ നിന്നുള്ള കുറിപ്പുകൾ പരിശോധിച്ച് മെച്ചപ്പെടുത്തലുകൾ നിർദ്ദേശിക്കുക.",
+    "assignedTo": "user2",
+    "status": "in-progress",
+    "createdAt": "2025-09-22T11:00:00Z"
+  }
+]
