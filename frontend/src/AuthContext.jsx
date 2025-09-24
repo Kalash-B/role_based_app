@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    // Redirect will be handled by ProtectedRoute
   };
 
   return (

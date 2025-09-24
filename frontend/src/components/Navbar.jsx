@@ -16,7 +16,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate(user?.role === "admin" ? "/admin/login" : "/login");
+    navigate("/login");
   };
 
   const navigateToSection = (section) => {
