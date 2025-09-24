@@ -6,13 +6,11 @@ import { useTasks } from '../components/TaskContext';
 import ChatBot from '../components/Chatbot';
 import { useAuth } from "../AuthContext"; // ⬅️ import here
 
-
 export const TASK_ROLES = ['1', '2', '3']; // user IDs: engineer, manager, depotManager
 
 const AdminDashboard = () => {
   const { tasks, setTasks } = useTasks();
-  const { user } = useAuth(); // ⬅️ fix: now user is defined
-
+  const { user } = useAuth(); // ⬅️ user info
 
   const handleTaskDelete = (taskId) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
@@ -30,6 +28,11 @@ const AdminDashboard = () => {
     setTasks([...tasks, ...tasksWithId]);
   };
 
+  // ✅ Dynamic counts
+  const totalTasks = tasks.length;
+  const pendingTasks = tasks.filter((t) => t.status === 'pending').length;
+  const completedTasks = tasks.filter((t) => t.status === 'completed').length;
+
   return (
     <div className="flex h-screen bg-[#CAE4DB]">
       {/* Sidebar */}
@@ -46,17 +49,17 @@ const AdminDashboard = () => {
         <section className="flex flex-col sm:flex-row gap-4">
           <div className="p-4 flex-1 max-w-xs sm:max-w-none min-w-[200px] shadow-md hover:shadow-lg hover:-translate-y-1 transition transform duration-200 space-y-3 mx-auto border border-[#A4CCD9] rounded-xl bg-white">
             <p className="text-base font-normal mb-1 text-gray-900">Total Tasks</p>
-            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">13</p>
+            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">{totalTasks}</p>
           </div>
 
           <div className="p-4 flex-1 max-w-xs sm:max-w-none min-w-[200px] shadow-md hover:shadow-lg hover:-translate-y-1 transition transform duration-200 space-y-3 mx-auto border border-[#A4CCD9] rounded-xl bg-white">
             <p className="text-base font-normal mb-1 text-gray-900">Pending Tasks</p>
-            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">8</p>
+            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">{pendingTasks}</p>
           </div>
 
           <div className="p-4 flex-1 max-w-xs sm:max-w-none min-w-[200px] shadow-md hover:shadow-lg hover:-translate-y-1 transition transform duration-200 space-y-3 mx-auto border border-[#A4CCD9] rounded-xl bg-white">
             <p className="text-base font-normal mb-1 text-gray-900">Completed Tasks</p>
-            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">5</p>
+            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">{completedTasks}</p>
           </div>
         </section>
 
@@ -87,8 +90,6 @@ const AdminDashboard = () => {
       {/* Chatbot */}
       <ChatBot />
     </div>
-
-
   );
 };
 
