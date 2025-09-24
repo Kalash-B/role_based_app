@@ -2,26 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(undefined);
 
-// Hardcoded users and admins
-const USERS = [
-  { id: '1', username: 'Engineer', role: 'user', name: 'John Doe' },
-  { id: '2', username: 'Manager', role: 'user', name: 'Jane Smith' },
-  { id: '3', username: 'Depot_Manager', role: 'user', name: 'Bob Johnson' },
-];
-
-const ADMINS = [
-  { id: 'admin1', username: 'admin', role: 'admin', name: 'Admin User' },
-  { id: 'admin2', username: 'superadmin', role: 'admin', name: 'Super Admin' },
-];
-
-const PASSWORDS = {
-  Engineer: 'password1',
-  Manager: 'password2',
-  Depot_Manager: 'password3',
-  admin: 'admin123',
-  superadmin: 'super123',
-};
-
 export const AuthProvider = ({ children }) => {
   // Initialize user from localStorage if available
   const [user, setUser] = useState(() => {
@@ -38,18 +18,39 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  const login = (username, password, isAdmin) => {
-    const userList = isAdmin ? ADMINS : USERS;
-    const foundUser = userList.find((u) => u.username === username);
+  const login = async (username, password, isAdmin) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          isAdmin
+        })
+      });
 
-    if (foundUser && PASSWORDS[username] === password) {
-      setUser(foundUser);
-      return true;
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store token and user data
+        localStorage.setItem('token', data.token);
+        setUser(data.user);
+        return true;
+      } else {
+        console.error('Login failed:', data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
   };
 

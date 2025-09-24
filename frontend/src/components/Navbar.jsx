@@ -19,10 +19,17 @@ const Navbar = () => {
     navigate(user?.role === "admin" ? "/admin/login" : "/login");
   };
 
+  const navigateToSection = (section) => {
+    // Dispatch a custom event to communicate with AdminDashboard
+    window.dispatchEvent(new CustomEvent('navigateToSection', { detail: section }));
+    // Store the active section in localStorage for persistence
+    localStorage.setItem('activeAdminSection', section);
+  };
+
   // Menu items with icons
   const adminMenu = [
-    { name: "Upload Doc", icon: <Upload size={18} />, onClick: () => {} },
-    { name: "Create User", icon: <UserPlus size={18} />, onClick: () => {} },
+    { name: "Upload Doc", icon: <Upload size={18} />, onClick: () => navigateToSection('dashboard') },
+    { name: "User Management", icon: <UserPlus size={18} />, onClick: () => navigateToSection('users') },
     { name: "Summarization", icon: <FileText size={18} />, onClick: () => {} },
     { name: "Category of GR", icon: <ListTree size={18} />, onClick: () => {} },
   ];

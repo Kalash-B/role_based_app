@@ -10,11 +10,12 @@ const UserLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
-    if (login(username, password, false)) {
+    const success = await login(username, password, false);
+    if (success) {
       navigate('/dashboard');
     } else {
       setError('Invalid user credentials');
