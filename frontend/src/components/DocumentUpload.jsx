@@ -80,13 +80,13 @@ const DocumentUpload = ({ onTaskCreate }) => {
         let userText = '';
         switch (user.role) {
           case 'engineer':
-            userText = "Technical analysis needed for ${file.name}. Focus on system design, architecture, and technical details.";
+            userText = `Technical analysis needed for ${file.name}. Focus on system design, architecture, and technical details.`;
             break;
           case 'manager':
-            userText = "Prepare report and overview for ${file.name}. Include summary, important points, and managerial insights.";
+            userText = `Prepare report and overview for ${file.name}. Include summary, important points, and managerial insights.`;
             break;
           case 'depot':
-            userText = "Review logistics and resource allocation for ${file.name}. Ensure proper distribution and inventory tracking.";
+            userText = `Review logistics and resource allocation for ${file.name}. Ensure proper distribution and inventory tracking.`;
             break;
           default: userText = "Process task for ${file.name}";
         }

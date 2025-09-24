@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
+import {
+  Upload,
+  UserPlus,
+  FileText,
+  ListTree,
+  LogOut,
+} from "lucide-react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -12,17 +19,17 @@ const Navbar = () => {
     navigate(user?.role === "admin" ? "/admin/login" : "/login");
   };
 
-  // Define menu items for different roles
+  // Menu items with icons
   const adminMenu = [
-    { name: "Upload Doc", onClick: () => {} },
-    { name: "Create User", onClick: () => {} },
-    { name: "Summarization", onClick: () => {} },
-    { name: "Category of GR", onClick: () => {} },
+    { name: "Upload Doc", icon: <Upload size={18} />, onClick: () => {} },
+    { name: "Create User", icon: <UserPlus size={18} />, onClick: () => {} },
+    { name: "Summarization", icon: <FileText size={18} />, onClick: () => {} },
+    { name: "Category of GR", icon: <ListTree size={18} />, onClick: () => {} },
   ];
 
   const userMenu = [
-    { name: "My Tasks", onClick: () => {} },
-    { name: "Summarization", onClick: () => {} },
+    { name: "My Tasks", icon: <ListTree size={18} />, onClick: () => {} },
+    { name: "Summarization", icon: <FileText size={18} />, onClick: () => {} },
   ];
 
   const menuToRender = user?.role === "admin" ? adminMenu : userMenu;
@@ -66,8 +73,9 @@ const Navbar = () => {
                 item.onClick();
                 setIsOpen(false); // auto-close on mobile
               }}
-              className="px-3 py-2 mb-2 rounded-xl hover:bg-[#2a8f8f] hover:text-white transition-colors duration-200 border hover:border-[#1f6d6d]"
+              className="flex items-center px-3 py-2 mb-2 rounded-xl hover:bg-[#2a8f8f] hover:text-white transition-colors duration-200 border hover:border-[#1f6d6d] gap-2"
             >
+              {item.icon}
               {item.name}
             </a>
           ))}
@@ -77,8 +85,9 @@ const Navbar = () => {
         <div>
           <button
             onClick={handleLogout}
-            className="bg-[#CAE4DB] w-full text-[#00303F] font-semibold px-4 py-2 rounded-lg hover:bg-[#55c1e5] hover:text-[#00303F] transition-all duration-300 shadow-md"
+            className="flex items-center justify-center gap-2 bg-[#CAE4DB] w-full text-[#00303F] font-semibold px-4 py-2 rounded-lg hover:bg-[#55c1e5] hover:text-[#00303F] transition-all duration-300 shadow-md"
           >
+            <LogOut size={18} />
             Logout
           </button>
         </div>

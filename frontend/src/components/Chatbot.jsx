@@ -10,52 +10,38 @@ const ChatBot = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
 
-  // Load tasks from localStorage on mount
-  useEffect(() => {
-    const storedTasks = localStorage.getItem("tasks");
-    if (storedTasks) {
-      try {
-        const parsedTasks = JSON.parse(storedTasks);
-        // Filter tasks for this user
-        const userTasks = parsedTasks.filter((task) => task.assignedTo === userId);
-        setTasks(userTasks);
-      } catch (err) {
-        console.error("Error parsing tasks from localStorage:", err);
-      }
-    }
-  }, [userId]);
-
   const toggleChat = () => setIsOpen(!isOpen);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1️⃣ Get the logged-in user
     const user = JSON.parse(localStorage.getItem("user"));
+    const allTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const userTasks = allTasks.filter(task => task.assignedTo === user.id);
+    console.log("User Tasks:", userTasks);
 
-    // 2️⃣ Get all tasks
-    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-    // 3️⃣ Filter tasks for the logged-in user
-    const userTasks = tasks.filter(task => task.assignedTo === user.id);
-
-    // 4️⃣ Map only the summary
-    const userSummaries = userTasks.map(task => task.summary);
-
-    console.log(userSummaries);
-
-
-    const newMessages = [...messages, { sender: "user", text: input }];
-    setMessages(newMessages);
+    // Add user message
+    setMessages(prev => [...prev, { sender: "user", text: input }]);
     setLoading(true);
 
+    // Format function
+    const formatResponse = (text) => {
+      if (!text) return "";
+      let formatted = text;
+      formatted = formatted.replace(/\*/g, "");      // remove asterisks
+      formatted = formatted.replace(/- /g, "\n• ");  // bullet points
+      formatted = formatted.replace(/\d+\./g, "\n$&"); // numbered lists
+      formatted = formatted.replace(/\n{2,}/g, "\n\n");  // collapse multiple line breaks
+      return formatted.trim();
+    };
+
     try {
-      // Prepare tasks in English to send to AI
-      const tasksForAI = tasks.map((task) => ({
+      // Send only the logged-in user's tasks
+      const tasksForAI = userTasks.map(task => ({
         title: task.title,
         description: task.description,
-        summary: userSummaries,
+        summary: task.summary,
         status: task.status,
         deadline: task.deadline || "Not set",
       }));
@@ -63,18 +49,22 @@ const ChatBot = ({ userId }) => {
       const response = await fetch("http://localhost:5000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: input,
-          tasks: tasksForAI  // sending tasks along with user message
-        }),
+        body: JSON.stringify({ message: input, tasks: tasksForAI }),
       });
 
       const data = await response.json();
 
       // Add AI reply
-      setMessages((prev) => [...prev, { sender: "bot", text: data.reply }]);
+      setMessages(prev => [
+        ...prev,
+        { sender: "bot", text: formatResponse(data.reply) },
+      ]);
+
+      // Optional: Update local tasks for displaying in chat
+      setTasks(userTasks);
+
     } catch (error) {
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
         { sender: "bot", text: "⚠️ Server error. Please try again later." },
       ]);
@@ -83,7 +73,6 @@ const ChatBot = ({ userId }) => {
       setInput("");
     }
   };
-
 
   return (
     <div>
@@ -98,7 +87,8 @@ const ChatBot = ({ userId }) => {
 
       {/* Popup Chat Box */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 bg-white rounded-xl shadow-lg border border-[#A4CCD9] flex flex-col">
+        <div className="fixed bottom-24 right-6 w-3xl h-1/2 bg-white rounded-xl shadow-lg border border-[#A4CCD9] flex flex-col">
+
           {/* Header */}
           <div className="flex justify-between items-center px-4 py-2 bg-[#C4E1E6] rounded-t-xl">
             <h3 className="font-semibold text-black">Chat Bot</h3>
@@ -107,18 +97,17 @@ const ChatBot = ({ userId }) => {
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 p-3 space-y-2 overflow-y-auto max-h-64">
+          {/* Messages Container */}
+          <div className="flex-1 p-3 overflow-y-auto flex flex-col space-y-2">
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <span
                   className={`px-3 py-2 rounded-lg text-sm ${msg.sender === "user"
-                    ? "bg-[#48B3AF] text-white"
-                    : "bg-gray-200 text-gray-800"
+                      ? "bg-[#48B3AF] text-white"
+                      : "bg-gray-200 text-gray-800 whitespace-pre-wrap"
                     }`}
                 >
                   {msg.text}
@@ -126,7 +115,6 @@ const ChatBot = ({ userId }) => {
               </div>
             ))}
 
-            {/* Show tasks as separate messages */}
             {tasks.map((task) => (
               <div key={task.id} className="flex justify-start">
                 <span className="px-3 py-2 rounded-lg text-sm bg-yellow-100 text-yellow-800">
@@ -144,8 +132,11 @@ const ChatBot = ({ userId }) => {
             )}
           </div>
 
-          {/* Input */}
-          <form onSubmit={handleSend} className="p-2 border-t border-gray-200 flex">
+          {/* Input Form - fixed at bottom */}
+          <form
+            onSubmit={handleSend}
+            className="px-3 py-2 border-t border-gray-200 flex flex-none"
+          >
             <input
               type="text"
               className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8DBCC7]"
@@ -162,7 +153,9 @@ const ChatBot = ({ userId }) => {
           </form>
         </div>
       )}
+
     </div>
+
   );
 };
 
